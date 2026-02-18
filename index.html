@@ -149,8 +149,11 @@
   <div class="app-shell">
     <div id="app-header" style="display:none; margin-bottom: 15px;">
         <div id="stats-dashboard" style="display: flex; justify-content: space-between; align-items: center; background: rgba(0,0,0,0.2); padding: 10px; border-radius: 12px; margin-bottom: 10px;">
-            <span style="font-size: 0.85rem;">Visited: <b id="progress-text" style="color: var(--accent);">0</b></span>
-            <div style="font-size: 0.7rem; color: var(--text-muted);">Total: <span id="total-links">0</span></div>
+            <div style="display:flex; flex-direction:column;">
+                <span style="font-size: 0.85rem;">Visited: <b id="progress-text" style="color: var(--accent);">0</b></span>
+                <span style="font-size: 0.7rem; color: var(--text-muted);">Total: <span id="total-links">0</span></span>
+            </div>
+            <button onclick="resetProgress()" style="background:rgba(239, 68, 68, 0.2); border:1px solid #ef4444; color:#fca5a5; padding:6px 12px; border-radius:8px; font-size:0.75rem; cursor:pointer; font-weight:bold;">Reset</button>
         </div>
         <input type="text" id="search-input" placeholder="🔍 Cari Pulau, Provinsi..." class="search-box">
     </div>
@@ -197,13 +200,13 @@
         islandName: group.island,
         provinces: group.provinces.map(p => {
           let users = [];
-          let numUsers = p.q / 10;
+          let numUsers = p.q / 20;
           for (let i = 1; i <= numUsers; i++) {
             users.push({
               userName: `User${i}`,
-              links: ALL_LINKS.slice(currentPos, currentPos + 10)
+              links: ALL_LINKS.slice(currentPos, currentPos + 20)
             });
-            currentPos += 10;
+            currentPos += 20;
           }
           return { provName: p.n, users: users };
         })
@@ -394,7 +397,12 @@
                 grid.innerHTML = '';
 
                 if (results.length === 0) {
-                    grid.innerHTML = `<div style="text-align:center; padding:20px; color:var(--text-muted)">Tidak ditemukan hasil untuk "${term}"</div>`;
+                    const noResult = document.createElement('div');
+                    noResult.style.textAlign = 'center';
+                    noResult.style.padding = '20px';
+                    noResult.style.color = 'var(--text-muted)';
+                    noResult.innerText = `Tidak ditemukan hasil untuk "${term}"`;
+                    grid.appendChild(noResult);
                 } else {
                     results.forEach(res => {
                         const btn = document.createElement('button');
