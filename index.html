@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Project Askara - Survey Panel</title>
+  <title>Project Bestari - Survey Panel</title>
   <style>
     @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap");
     :root { --bg-main: #020617; --bg-card: #0f172a; --accent: #2563eb; --accent-soft: #60a5fa; --text-main: #e5e7eb; --text-muted: #9ca3af; }
@@ -22,8 +22,8 @@
   <div class="app-shell">
     <div id="view-welcome">
       <div style="font-size: 0.7rem; color: var(--accent-soft); letter-spacing: 2px;">ACORN CONSULTANT</div>
-      <h1 style="font-size:1.6rem; margin: 5px 0;">Project Askara<br>Survey Hub</h1>
-      <p style="color:var(--text-muted); font-size: 0.85rem;">Welcome to Askara Projects</p>
+      <h1 style="font-size:1.6rem; margin: 5px 0;">Project Bestari<br>Survey Hub</h1>
+      <p style="color:var(--text-muted); font-size: 0.85rem;">Sistem pembagian 3.000 link survey (Pulau > Provinsi > Kota > Interviewer).</p>
       <button class="btn-primary" onclick="showView('view-islands')">MASUK DASHBOARD</button>
     </div>
 
@@ -39,22 +39,31 @@
       <div id="provinces-grid" class="grid-container"></div>
     </div>
 
-    <div id="view-users" style="display:none;">
-      <button id="btn-back-to-provinces" class="back-link">← Pilih Provinsi</button>
-      <h3 id="province-title"></h3>
-      <div id="users-grid" class="grid-container"></div>
+    <div id="view-cities" style="display:none;">
+      <button id="btn-back-to-provinces-from-city" class="back-link">← Pilih Provinsi</button>
+      <h3 id="province-title-for-city"></h3>
+      <div id="cities-grid" class="grid-container"></div>
+    </div>
+
+    <div id="view-interviewers" style="display:none;">
+      <button id="btn-back-to-prev" class="back-link">← Kembali</button>
+      <h3 id="location-title-for-interviewer"></h3>
+      <div id="interviewers-grid" class="grid-container"></div>
     </div>
 
     <div id="view-links" style="display:none;">
-      <button id="btn-back-to-users" class="back-link">← Pilih User</button>
-      <h3 id="user-title"></h3>
+      <button id="btn-back-to-interviewers" class="back-link">← Pilih Interviewer</button>
+      <h3 id="interviewer-title"></h3>
       <div id="links-grid" class="grid-container"></div>
     </div>
   </div>
 
   <script>
-    // PASTE 3000 LINK KAMU DI ANTARA TANDA KUTIP DI BAWAH INI
-    const RAW_CONTENT = `https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191010001&ci=id-ID
+    // ==========================================
+    // 1. PASTE LINK DI SINI
+    // ==========================================
+    const RAW_CONTENT = `
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191010001&ci=id-ID
 https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191010002&ci=id-ID
 https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191010003&ci=id-ID
 https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191010004&ci=id-ID
@@ -3059,10 +3068,907 @@ https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013002&ci=i
 https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013003&ci=id-ID
 https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013004&ci=id-ID
 https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013005&ci=id-ID
-`;
-    const ALL_LINKS = RAW_CONTENT.split('\n').map(l => l.trim()).filter(l => l !== "");
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013006&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013007&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013008&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013009&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013010&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013011&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013012&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013013&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013014&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013015&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013016&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013017&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013018&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013019&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013020&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013021&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013022&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013023&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013024&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013025&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013026&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013027&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013028&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013029&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013030&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013031&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013032&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013033&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013034&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013035&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013036&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013037&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013038&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013039&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013040&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013041&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013042&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013043&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013044&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013045&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013046&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013047&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013048&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013049&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013050&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013051&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013052&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013053&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013054&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013055&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013056&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013057&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013058&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013059&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013060&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013061&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013062&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013063&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013064&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013065&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013066&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013067&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013068&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013069&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013070&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013071&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013072&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013073&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013074&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013075&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013076&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013077&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013078&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013079&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013080&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013081&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013082&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013083&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013084&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013085&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013086&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013087&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013088&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013089&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013090&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013091&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013092&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013093&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013094&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013095&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013096&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013097&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013098&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013099&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013100&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013101&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013102&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013103&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013104&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013105&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013106&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013107&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013108&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013109&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013110&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013111&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013112&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013113&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013114&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013115&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013116&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013117&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013118&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013119&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013120&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013121&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013122&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013123&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013124&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013125&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013126&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013127&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013128&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013129&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013130&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013131&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013132&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013133&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013134&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013135&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013136&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013137&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013138&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013139&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013140&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013141&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013142&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013143&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013144&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013145&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013146&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013147&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013148&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013149&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013150&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013151&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013152&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013153&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013154&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013155&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013156&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013157&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013158&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013159&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013160&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013161&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013162&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013163&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013164&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013165&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013166&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013167&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013168&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013169&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013170&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013171&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013172&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013173&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013174&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013175&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013176&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013177&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013178&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013179&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013180&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013181&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013182&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013183&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013184&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013185&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013186&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013187&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013188&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013189&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013190&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013191&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013192&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013193&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013194&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013195&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013196&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013197&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013198&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013199&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013200&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013201&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013202&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013203&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013204&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013205&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013206&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013207&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013208&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013209&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013210&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013211&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013212&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013213&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013214&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013215&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013216&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013217&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013218&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013219&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013220&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013221&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013222&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013223&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013224&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013225&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013226&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013227&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013228&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013229&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013230&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013231&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013232&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013233&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013234&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013235&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013236&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013237&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013238&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013239&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013240&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013241&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013242&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013243&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013244&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013245&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013246&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013247&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013248&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013249&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013250&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013251&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013252&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013253&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013254&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013255&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013256&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013257&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013258&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013259&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013260&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013261&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013262&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013263&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013264&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013265&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013266&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013267&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013268&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013269&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013270&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013271&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013272&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013273&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013274&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013275&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013276&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013277&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013278&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013279&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013280&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013281&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013282&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013283&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013284&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013285&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013286&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013287&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013288&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013289&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013290&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013291&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013292&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013293&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013294&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013295&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013296&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013297&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013298&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013299&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013300&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013301&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013302&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013303&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013304&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013305&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013306&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013307&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013308&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013309&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013310&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013311&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013312&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013313&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013314&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013315&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013316&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013317&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013318&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013319&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013320&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013321&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013322&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013323&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013324&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013325&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013326&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013327&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013328&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013329&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013330&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013331&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013332&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013333&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013334&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013335&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013336&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013337&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013338&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013339&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013340&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013341&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013342&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013343&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013344&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013345&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013346&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013347&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013348&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013349&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013350&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013351&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013352&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013353&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013354&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013355&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013356&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013357&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013358&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013359&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013360&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013361&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013362&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013363&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013364&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013365&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013366&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013367&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013368&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013369&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013370&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013371&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013372&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013373&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013374&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013375&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013376&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013377&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013378&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013379&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013380&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013381&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013382&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013383&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013384&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013385&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013386&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013387&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013388&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013389&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013390&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013391&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013392&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013393&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013394&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013395&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013396&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013397&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013398&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013399&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013400&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013401&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013402&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013403&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013404&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013405&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013406&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013407&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013408&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013409&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013410&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013411&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013412&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013413&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013414&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013415&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013416&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013417&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013418&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013419&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013420&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013421&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013422&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013423&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013424&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013425&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013426&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013427&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013428&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013429&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013430&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013431&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013432&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013433&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013434&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013435&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013436&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013437&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013438&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013439&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013440&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013441&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013442&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013443&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013444&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013445&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013446&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013447&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013448&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013449&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013450&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013451&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013452&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013453&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013454&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013455&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013456&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013457&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013458&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013459&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013460&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013461&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013462&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013463&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013464&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013465&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013466&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013467&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013468&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013469&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013470&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013471&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013472&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013473&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013474&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013475&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013476&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013477&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013478&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013479&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013480&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013481&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013482&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013483&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013484&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013485&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013486&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013487&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013488&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013489&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013490&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013491&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013492&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013493&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013494&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013495&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013496&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013497&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013498&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013499&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013500&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013501&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013502&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013503&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013504&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013505&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013506&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013507&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013508&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013509&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013510&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013511&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013512&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013513&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013514&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013515&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013516&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013517&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013518&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013519&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013520&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013521&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013522&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013523&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013524&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013525&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013526&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013527&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013528&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013529&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013530&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013531&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013532&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013533&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013534&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013535&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013536&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013537&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013538&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013539&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013540&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013541&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013542&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013543&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013544&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013545&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013546&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013547&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013548&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013549&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013550&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013551&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013552&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013553&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013554&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013555&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013556&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013557&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013558&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013559&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013560&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013561&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013562&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013563&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013564&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013565&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013566&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013567&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013568&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013569&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013570&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013571&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013572&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013573&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013574&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013575&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013576&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013577&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013578&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013579&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013580&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013581&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013582&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013583&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013584&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013585&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013586&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013587&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013588&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013589&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013590&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013591&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013592&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013593&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013594&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013595&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013596&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013597&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013598&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013599&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013600&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013601&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013602&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013603&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013604&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013605&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013606&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013607&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013608&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013609&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013610&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013611&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013612&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013613&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013614&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013615&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013616&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013617&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013618&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013619&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013620&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013621&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013622&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013623&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013624&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013625&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013626&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013627&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013628&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013629&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013630&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013631&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013632&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013633&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013634&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013635&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013636&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013637&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013638&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013639&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013640&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013641&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013642&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013643&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013644&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013645&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013646&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013647&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013648&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013649&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013650&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013651&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013652&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013653&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013654&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013655&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013656&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013657&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013658&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013659&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013660&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013661&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013662&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013663&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013664&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013665&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013666&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013667&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013668&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013669&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013670&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013671&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013672&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013673&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013674&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013675&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013676&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013677&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013678&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013679&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013680&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013681&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013682&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013683&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013684&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013685&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013686&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013687&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013688&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013689&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013690&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013691&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013692&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013693&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013694&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013695&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013696&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013697&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013698&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013699&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013700&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013701&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013702&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013703&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013704&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013705&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013706&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013707&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013708&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013709&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013710&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013711&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013712&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013713&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013714&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013715&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013716&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013717&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013718&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013719&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013720&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013721&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013722&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013723&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013724&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013725&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013726&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013727&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013728&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013729&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013730&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013731&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013732&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013733&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013734&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013735&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013736&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013737&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013738&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013739&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013740&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013741&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013742&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013743&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013744&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013745&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013746&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013747&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013748&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013749&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013750&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013751&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013752&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013753&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013754&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013755&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013756&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013757&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013758&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013759&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013760&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013761&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013762&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013763&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013764&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013765&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013766&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013767&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013768&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013769&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013770&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013771&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013772&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013773&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013774&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013775&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013776&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013777&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013778&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013779&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013780&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013781&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013782&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013783&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013784&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013785&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013786&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013787&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013788&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013789&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013790&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013791&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013792&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013793&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013794&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013795&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013796&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013797&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013798&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013799&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013800&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013801&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013802&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013803&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013804&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013805&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013806&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013807&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013808&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013809&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013810&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013811&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013812&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013813&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013814&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013815&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013816&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013817&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013818&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013819&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013820&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013821&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013822&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013823&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013824&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013825&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013826&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013827&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013828&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013829&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013830&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013831&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013832&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013833&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013834&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013835&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013836&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013837&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013838&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013839&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013840&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013841&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013842&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013843&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013844&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013845&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013846&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013847&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013848&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013849&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013850&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013851&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013852&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013853&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013854&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013855&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013856&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013857&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013858&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013859&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013860&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013861&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013862&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013863&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013864&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013865&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013866&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013867&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013868&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013869&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013870&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013871&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013872&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013873&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013874&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013875&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013876&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013877&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013878&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013879&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013880&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013881&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013882&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013883&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013884&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013885&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013886&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013887&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013888&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013889&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013890&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013891&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013892&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013893&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013894&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013895&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013896&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013897&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013898&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013899&ci=id-ID
+https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013900&ci=id-ID
+`; 
+    const ALL_LINKS = RAW_CONTENT.split('\n').map(l => l.trim()).filter(l => l !== "" && l.includes("http"));
     
-    // Struktur Data Sesuai Gambar & Kebutuhan Kamu
+    // ==========================================
+    // 2. STRUKTUR DATA (BISA KAMU EDIT KOTANYA DI SINI)
+    // ==========================================
     const DATA_STRUCTURE = [
       {
         island: "SUMATERA",
@@ -3075,7 +3981,16 @@ https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013005&ci=i
       {
         island: "JAVA",
         provinces: [
-          {n: "DI Yogyakarta", q: 120}, {n: "Banten", q: 360}
+          {n: "DI Yogyakarta", q: 120}, 
+          {
+            n: "Banten", 
+            // CONTOH: Banten dipecah jadi 3 kota (Total tetap 360 link)
+            cities: [
+              {n: "Tangerang", q: 120},
+              {n: "Serang", q: 120},
+              {n: "Cilegon", q: 120}
+            ]
+          }
         ]
       },
       {
@@ -3107,28 +4022,48 @@ https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013005&ci=i
       }
     ];
 
+    // ==========================================
+    // 3. LOGIKA PEMROSESAN (JANGAN DIUBAH)
+    // ==========================================
     let currentPos = 0;
+    
+    // Fungsi untuk membuat daftar interviewer (20 link per orang)
+    function generateInterviewers(quota) {
+      let interviewers = [];
+      let numInterviewers = quota / 20; // Otomatis 6 orang jika kuota 120
+      for (let i = 1; i <= numInterviewers; i++) {
+        interviewers.push({
+          name: `Interviewer${i}`,
+          links: ALL_LINKS.slice(currentPos, currentPos + 20)
+        });
+        currentPos += 20;
+      }
+      return interviewers;
+    }
+
     const finalData = DATA_STRUCTURE.map(group => {
       return {
         islandName: group.island,
         provinces: group.provinces.map(p => {
-          let users = [];
-          let numUsers = p.q / 10;
-          for (let i = 1; i <= numUsers; i++) {
-            users.push({
-              userName: `User${i}`,
-              links: ALL_LINKS.slice(currentPos, currentPos + 10)
+          if (p.cities && p.cities.length > 0) {
+            // Jika punya kota
+            let mappedCities = p.cities.map(c => {
+              return { cityName: c.n, interviewers: generateInterviewers(c.q) };
             });
-            currentPos += 10;
+            return { provName: p.n, hasCities: true, cities: mappedCities };
+          } else {
+            // Jika tidak punya kota
+            return { provName: p.n, hasCities: false, interviewers: generateInterviewers(p.q) };
           }
-          return { provName: p.n, users: users };
         })
       };
     });
 
+    // --- NAVIGASI UI ---
     function showView(id) {
-      ['view-welcome', 'view-islands', 'view-provinces', 'view-users', 'view-links'].forEach(v => {
-        document.getElementById(v).style.display = (v === id) ? 'block' : 'none';
+      ['view-welcome', 'view-islands', 'view-provinces', 'view-cities', 'view-interviewers', 'view-links'].forEach(v => {
+        const el = document.getElementById(v);
+        if(el) el.style.display = (v === id) ? 'block' : 'none';
       });
     }
 
@@ -3153,46 +4088,93 @@ https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013005&ci=i
       group.provinces.forEach((p, i) => {
         const btn = document.createElement('button');
         btn.className = 'card-item';
-        btn.innerHTML = `<div class="badge-circle">${i+1}</div><div><b>${p.provName}</b><br><small>${p.users.length} Users</small></div>`;
-        btn.onclick = () => renderUsers(islandIdx, i);
+        let detailText = p.hasCities ? `${p.cities.length} Kota` : `${p.interviewers.length} Interviewer`;
+        btn.innerHTML = `<div class="badge-circle">${i+1}</div><div><b>${p.provName}</b><br><small>${detailText}</small></div>`;
+        
+        // Cek apakah punya kota atau langsung ke interviewer
+        btn.onclick = () => {
+          if (p.hasCities) {
+            renderCities(islandIdx, i);
+          } else {
+            renderInterviewers(islandIdx, i, null);
+          }
+        };
         grid.appendChild(btn);
       });
       showView('view-provinces');
     }
 
-    function renderUsers(islandIdx, provIdx) {
+    function renderCities(islandIdx, provIdx) {
       const province = finalData[islandIdx].provinces[provIdx];
-      document.getElementById('province-title').innerText = province.provName;
-      const grid = document.getElementById('users-grid');
+      document.getElementById('province-title-for-city').innerText = province.provName;
+      const grid = document.getElementById('cities-grid');
       grid.innerHTML = '';
-      province.users.forEach((u, i) => {
+      province.cities.forEach((c, i) => {
         const btn = document.createElement('button');
         btn.className = 'card-item';
-        btn.innerHTML = `<div class="badge-circle">${i+1}</div><div><b>${u.userName}</b></div>`;
-        btn.onclick = () => renderLinks(islandIdx, provIdx, i);
+        btn.innerHTML = `<div class="badge-circle">${i+1}</div><div><b>${c.cityName}</b><br><small>${c.interviewers.length} Interviewer</small></div>`;
+        btn.onclick = () => renderInterviewers(islandIdx, provIdx, i);
         grid.appendChild(btn);
       });
-      document.getElementById('btn-back-to-provinces').onclick = () => renderProvinces(islandIdx);
-      showView('view-users');
+      document.getElementById('btn-back-to-provinces-from-city').onclick = () => renderProvinces(islandIdx);
+      showView('view-cities');
     }
 
-    function renderLinks(islandIdx, provIdx, userIdx) {
-      const user = finalData[islandIdx].provinces[provIdx].users[userIdx];
-      document.getElementById('user-title').innerText = `${user.userName} (${finalData[islandIdx].provinces[provIdx].provName})`;
+    function renderInterviewers(islandIdx, provIdx, cityIdx) {
+      const province = finalData[islandIdx].provinces[provIdx];
+      let dataTarget;
+      let title;
+
+      if (cityIdx !== null) {
+        dataTarget = province.cities[cityIdx].interviewers;
+        title = province.cities[cityIdx].cityName;
+        document.getElementById('btn-back-to-prev').onclick = () => renderCities(islandIdx, provIdx);
+      } else {
+        dataTarget = province.interviewers;
+        title = province.provName;
+        document.getElementById('btn-back-to-prev').onclick = () => renderProvinces(islandIdx);
+      }
+
+      document.getElementById('location-title-for-interviewer').innerText = title;
+      const grid = document.getElementById('interviewers-grid');
+      grid.innerHTML = '';
+      dataTarget.forEach((intv, i) => {
+        const btn = document.createElement('button');
+        btn.className = 'card-item';
+        btn.innerHTML = `<div class="badge-circle">${i+1}</div><div><b>${intv.name}</b><br><small>${intv.links.length} Link</small></div>`;
+        btn.onclick = () => renderLinks(islandIdx, provIdx, cityIdx, i);
+        grid.appendChild(btn);
+      });
+      showView('view-interviewers');
+    }
+
+    function renderLinks(islandIdx, provIdx, cityIdx, intvIdx) {
+      const province = finalData[islandIdx].provinces[provIdx];
+      let interviewer;
+      let locationName;
+
+      if (cityIdx !== null) {
+        interviewer = province.cities[cityIdx].interviewers[intvIdx];
+        locationName = province.cities[cityIdx].cityName;
+      } else {
+        interviewer = province.interviewers[intvIdx];
+        locationName = province.provName;
+      }
+
+      document.getElementById('interviewer-title').innerText = `${interviewer.name} (${locationName})`;
       const grid = document.getElementById('links-grid');
       grid.innerHTML = '';
-      user.links.forEach((l, i) => {
+      interviewer.links.forEach((l, i) => {
         const btn = document.createElement('button');
         btn.className = 'card-item';
         btn.innerHTML = `<div class="badge-circle">${i+1}</div><div style="font-size:0.7rem; word-break:break-all;">${l}</div>`;
         btn.onclick = () => window.open(l, '_blank');
         grid.appendChild(btn);
       });
-      document.getElementById('btn-back-to-users').onclick = () => renderUsers(islandIdx, provIdx);
+      document.getElementById('btn-back-to-interviewers').onclick = () => renderInterviewers(islandIdx, provIdx, cityIdx);
       showView('view-links');
     }
 
-    // Initialize
     window.onload = () => {
       renderIslands();
       showView('view-welcome');
