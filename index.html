@@ -15,7 +15,11 @@
     .card-item:hover { background: rgba(255,255,255,0.1); border-color: var(--accent-soft); transform: translateY(-2px); }
     .badge-circle { min-width: 30px; height: 30px; border-radius: 50%; background: var(--accent); display: flex; align-items: center; justify-content: center; font-size: 0.8rem; font-weight: bold; }
     .back-link { color: var(--accent-soft); cursor: pointer; background: none; border: none; margin-bottom: 10px; padding: 0; font-size: 0.9rem; }
-    h3 { margin-top: 5px; border-left: 4px solid var(--accent); padding-left: 10px; }
+    h3 { margin-top: 5px; border-left: 4px solid var(--accent); padding-left: 10px; margin-bottom: 10px;}
+    
+    /* CSS Tambahan untuk Fitur Search */
+    .search-box { width: 100%; padding: 12px 15px; border-radius: 999px; border: 1px solid rgba(148, 163, 184, 0.5); background: rgba(15, 23, 42, 0.9); color: var(--text-main); font-family: inherit; font-size: 0.85rem; outline: none; transition: 0.2s; box-sizing: border-box; }
+    .search-box:focus { border-color: var(--accent-soft); box-shadow: 0 0 0 2px rgba(96, 165, 250, 0.2); }
   </style>
 </head>
 <body>
@@ -29,7 +33,10 @@
 
     <div id="view-islands" style="display:none;">
       <button class="back-link" onclick="showView('view-welcome')">← Kembali</button>
-      <h3>Pilih Pulau</h3>
+      <h3>Pilih Pulau atau Cari</h3>
+      
+      <input type="text" id="input-search" class="search-box" placeholder="Ketik nama kota atau provinsi..." autocomplete="off">
+      <div id="search-results-grid" class="grid-container" style="display:none;"></div>
       <div id="islands-grid" class="grid-container"></div>
     </div>
 
@@ -3966,7 +3973,10 @@ https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013900&ci=i
 `; 
     const ALL_LINKS = RAW_CONTENT.split('\n').map(l => l.trim()).filter(l => l !== "" && l.includes("http"));
 
-    const DATA_STRUCTURE = [
+    // ==========================================
+    // STRUKTUR DATA (u = Jumlah User/Interviewer, l = Link per User)
+    // ==========================================
+      const DATA_STRUCTURE = [
       {
         island: "SUMATERA",
         provinces: [
@@ -4045,10 +4055,10 @@ https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013900&ci=i
         ]
       }
     ];
-
+    
     let currentPos = 0;
     
-    // Fungsi Generate Interviewer berdasarkan jumlah user (u) dan link per user (l)
+    // Fungsi Generate Interviewer
     function generateInterviewers(usersCount, linksPerUser) {
       let interviewers = [];
       for (let i = 1; i <= usersCount; i++) {
@@ -4093,15 +4103,80 @@ https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013900&ci=i
       });
     }
 
+    // --- LOGIKA PENCARIAN (BARU) ---
+    const inputSearch = document.getElementById('input-search');
+    const searchResultsGrid = document.getElementById('search-results-grid');
+    const islandsGrid = document.getElementById('islands-grid');
+
+    inputSearch.addEventListener('input', (e) => {
+      const keyword = e.target.value.toLowerCase();
+      
+      // Jika kotak pencarian kosong, kembalikan tampilan daftar pulau
+      if (keyword.trim() === '') {
+        searchResultsGrid.style.display = 'none';
+        islandsGrid.style.display = 'grid';
+        return;
+      }
+
+      // Tampilkan hasil pencarian, sembunyikan daftar pulau
+      islandsGrid.style.display = 'none';
+      searchResultsGrid.style.display = 'grid';
+      searchResultsGrid.innerHTML = '';
+
+      let found = false;
+
+      finalData.forEach((island, iIdx) => {
+        island.provinces.forEach((prov, pIdx) => {
+          // Cari jika tidak ada kota (berarti data setingkat provinsi)
+          if (!prov.hasCities && prov.provName.toLowerCase().includes(keyword)) {
+            addSearchResult(prov.provName, island.islandName, iIdx, pIdx, null, prov.interviewers.length);
+            found = true;
+          }
+          // Cari jika ada kota
+          if (prov.hasCities) {
+            let provMatches = prov.provName.toLowerCase().includes(keyword);
+            prov.cities.forEach((city, cIdx) => {
+              // Menampilkan kota jika nama kota diketik ATAU nama provinsinya diketik
+              if (provMatches || city.cityName.toLowerCase().includes(keyword)) {
+                 addSearchResult(city.cityName, `${prov.provName} (${island.islandName})`, iIdx, pIdx, cIdx, city.interviewers.length);
+                 found = true;
+              }
+            });
+          }
+        });
+      });
+
+      // Jika tidak ada hasil
+      if (!found) {
+        searchResultsGrid.innerHTML = `<div style="text-align:center; padding: 20px; color: var(--text-muted); font-size: 0.85rem;">Daerah "${e.target.value}" tidak ditemukan.</div>`;
+      }
+    });
+
+    function addSearchResult(name, parentName, iIdx, pIdx, cIdx, intvCount) {
+        const btn = document.createElement('button');
+        btn.className = 'card-item';
+        btn.innerHTML = `<div class="badge-circle" style="background:var(--accent-soft); color:#000; font-size:1rem;">🔍</div><div><b>${name}</b><br><small>${parentName} • ${intvCount} Interviewer</small></div>`;
+        btn.onclick = () => {
+            // Bersihkan kolom pencarian saat diklik
+            inputSearch.value = '';
+            searchResultsGrid.style.display = 'none';
+            islandsGrid.style.display = 'grid';
+            
+            // Langsung melompat ke layar daftar interviewer
+            renderInterviewers(iIdx, pIdx, cIdx);
+        };
+        searchResultsGrid.appendChild(btn);
+    }
+    // --- AKHIR LOGIKA PENCARIAN ---
+
     function renderIslands() {
-      const grid = document.getElementById('islands-grid');
-      grid.innerHTML = '';
+      islandsGrid.innerHTML = '';
       finalData.forEach((group, i) => {
         const btn = document.createElement('button');
         btn.className = 'card-item';
         btn.innerHTML = `<div class="badge-circle">${i+1}</div><div><b>${group.islandName}</b><br><small>${group.provinces.length} Provinsi</small></div>`;
         btn.onclick = () => renderProvinces(i);
-        grid.appendChild(btn);
+        islandsGrid.appendChild(btn);
       });
     }
 
@@ -4142,7 +4217,12 @@ https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013900&ci=i
       let dataTarget = cityIdx !== null ? province.cities[cityIdx].interviewers : province.interviewers;
       let title = cityIdx !== null ? province.cities[cityIdx].cityName : province.provName;
       
-      document.getElementById('btn-back-to-prev').onclick = () => cityIdx !== null ? renderCities(islandIdx, provIdx) : renderProvinces(islandIdx);
+      // Logika navigasi "Kembali" pintar (jika diakses dari search, kembali ke mana?)
+      document.getElementById('btn-back-to-prev').onclick = () => {
+         // Agar aman saat kembali dari hasil pencarian
+         if(cityIdx !== null) renderCities(islandIdx, provIdx); 
+         else renderProvinces(islandIdx);
+      };
       document.getElementById('location-title-for-interviewer').innerText = title;
       
       const grid = document.getElementById('interviewers-grid');
@@ -4182,4 +4262,4 @@ https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191013900&ci=i
     };
   </script>
 </body>
-</html>  
+</html>
