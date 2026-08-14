@@ -25,7 +25,7 @@
     <div id="view-welcome">
       <div style="font-size: 0.7rem; color: var(--accent-soft); letter-spacing: 2px;">ACORN CONSULTANT</div>
       <h1 style="font-size:1.6rem; margin: 5px 0;">Project KAMARAH<br>Survey Hub</h1>
-      <p style="color:var(--text-muted); font-size: 0.85rem;">Distribusi 450 link spesifik rata per wilayah dan interviewer.</p>
+      <p style="color:var(--text-muted); font-size: 0.85rem;" id="total-info">Distribusi link spesifik per wilayah dan interviewer.</p>
       <button class="btn-primary" onclick="showView('view-regions')">MASUK DASHBOARD</button>
     </div>
 
@@ -55,47 +55,62 @@
       {
         id: 'jabodetabek',
         name: 'JABODETABEK',
-        linksPerUser: 11, // 16 user * 11 = 176
+        totalLinks: 176,
         users: [
-          'SRI SUWARTI', 'SULASTRI', 'RONDANG', 'GRISELDA', 'BEBI AGUSTIN',
-          'EVIE BUNGAI', 'PUTRI WAHYU', 'ARI YULIAWATY', 'DEWI CHOVIZO',
-          'INTERVIEWER 1', 'INTERVIEWER 2', 'INTERVIEWER 3', 'INTERVIEWER 4',
-          'INTERVIEWER 5', 'INTERVIEWER 6', 'INTERVIEWER 7'
+          { name: 'SRI SUWARTI', quota: 13 },
+          { name: 'SULASTRI', quota: 13 },
+          { name: 'RONDANG', quota: 13 },
+          { name: 'GRISELDA', quota: 13 },
+          { name: 'BEBI AGUSTIN', quota: 13 },
+          { name: 'EVIE BUNGAI', quota: 13 },
+          { name: 'PUTRI WAHYU', quota: 13 },
+          { name: 'ARI YULIAWATI', quota: 13 },
+          { name: 'DEWI CHOVIZO', quota: 9 },
+          { name: 'RIRIN NINI', quota: 9 },
+          { name: 'RISMA', quota: 9 },
+          { name: 'INDAH', quota: 9 },
+          { name: 'PUDJI', quota: 9 },
+          { name: 'AUDRY', quota: 9 },
+          { name: 'RENI', quota: 9 },
+          { name: 'KHOLIVYAH', quota: 9 }
         ]
       },
       {
         id: 'medan',
         name: 'MEDAN',
-        linksPerUser: 10, // 10 user * 10 = 100
+        totalLinks: 110,
         users: [
-          'Rini Rita', 'Era Wahyuni', 'Merry', 'Farida Hanum', 'Morina',
-          'Elvrilina / Lina', 'Dorlina', 'Siti Rohani', 'Raja', 'Edi Rianto'
+          { name: 'Rini Rita', quota: 11 }, { name: 'Era Wahyuni', quota: 11 }, { name: 'Merry', quota: 11 }, { name: 'Farida Hanum', quota: 11 }, { name: 'Morina', quota: 11 },
+          { name: 'Elvrilina / Lina', quota: 11 }, { name: 'Dorlina', quota: 11 }, { name: 'Siti Rohani', quota: 11 }, { name: 'Raja', quota: 11 }, { name: 'Edi Rianto', quota: 11 }
         ]
       },
       {
         id: 'bali',
         name: 'BALI',
-        linksPerUser: 10, // 10 user * 10 = 100
+        totalLinks: 140,
         users: [
-          'Novilia Ayu', 'Indah W', 'Rianty', 'Danthi', 'Dita A',
-          'Made Edy', 'Diah Fida', 'Kadek Dyah', 'Wayan Cenik', 'Amini'
+          { name: 'Novilia Ayu', quota: 14 }, { name: 'Indah W', quota: 14 }, { name: 'Rianty', quota: 14 }, { name: 'Danthi', quota: 14 }, { name: 'Dita A', quota: 14 },
+          { name: 'Made Edy', quota: 14 }, { name: 'Diah Fida', quota: 14 }, { name: 'Kadek Dyah', quota: 14 }, { name: 'Wayan Cenik', quota: 14 }, { name: 'Amini', quota: 14 }
         ]
       },
       {
         id: 'samarinda',
         name: 'SAMARINDA',
-        linksPerUser: 10, // 5 user * 10 = 50
-        users: ['HARISON', 'EVA DEHLISA', 'ARBAINAH', 'AGUSTIN', 'MISNIWATI']
+        totalLinks: 12,
+        users: [
+          { name: 'AGIK ELVANDI', quota: 4 }, { name: 'MAYASARI', quota: 4 }, { name: 'KODIR', quota: 4 }
+        ]
       },
       {
         id: 'makasar',
         name: 'MAKASAR',
-        linksPerUser: 8, // 3 user * 8 = 24
-        users: ['Tenri', 'Surialam', 'Nilawati']
+        totalLinks: 12,
+        users: [
+          { name: 'Tenri', quota: 4 }, { name: 'Surialam', quota: 4 }, { name: 'Nilawati', quota: 4 }
+        ]
       }
     ];
 
-    // Placeholder untuk raw content (Nanti user paste disini)
     const RAW_CONTENT = `https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191010001&ci=id-ID
 https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191010002&ci=id-ID
 https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191010003&ci=id-ID
@@ -554,16 +569,16 @@ https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191010450&ci=i
       let regionUsers = [];
       let totalAssignedToRegion = 0;
       
-      region.users.forEach(userName => {
+      region.users.forEach(user => {
         let userLinks = [];
-        for (let i = 0; i < region.linksPerUser; i++) {
+        for (let i = 0; i < user.quota; i++) {
           if (linkIndex < ALL_LINKS.length) {
             userLinks.push(ALL_LINKS[linkIndex]);
             linkIndex++;
             totalAssignedToRegion++;
           }
         }
-        regionUsers.push({ name: userName, links: userLinks });
+        regionUsers.push({ name: user.name, links: userLinks });
       });
 
       return {
@@ -580,7 +595,6 @@ https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191010450&ci=i
       ['view-welcome', 'view-regions', 'view-interviewers', 'view-links'].forEach(id => {
         document.getElementById(id).style.display = (id === viewId) ? 'block' : 'none';
       });
-      // Reset search if exiting
       if (viewId === 'view-regions') {
         document.getElementById('input-search').value = '';
         document.getElementById('search-results-grid').style.display = 'none';
@@ -638,7 +652,6 @@ https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191010450&ci=i
       showView('view-links');
     }
 
-    // Fitur Search Pintar
     document.getElementById('input-search').addEventListener('input', (e) => {
       const q = e.target.value.toLowerCase();
       const resGrid = document.getElementById('search-results-grid');
@@ -656,7 +669,6 @@ https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191010450&ci=i
 
       let resultsCount = 0;
       finalData.forEach((region, rIdx) => {
-        // Match Region
         if (region.name.toLowerCase().includes(q)) {
           const btn = document.createElement('button');
           btn.className = 'card-item';
@@ -667,7 +679,6 @@ https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191010450&ci=i
           resultsCount++;
         }
 
-        // Match Interviewers
         region.interviewers.forEach((intv, iIdx) => {
           if (intv.name.toLowerCase().includes(q)) {
             const btn = document.createElement('button');
@@ -686,6 +697,7 @@ https://insights.ipsosinteractive.com/surveys/?pid=S26006923&id=10191010450&ci=i
     });
 
     window.onload = () => {
+      document.getElementById('total-info').innerText = `Distribusi spesifik ${linkIndex} link per wilayah dan interviewer.`;
       renderRegions();
       showView('view-welcome');
     };
