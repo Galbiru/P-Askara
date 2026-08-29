@@ -8,10 +8,9 @@
     @import url("https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=Plus+Jakarta+Sans:wght@300;400;600&display=swap");
     
     :root { 
-      /* Tema Asuransi Premium (Navy & Gold/Silver) */
       --bg-main: #0B1121; 
       --bg-card: #151F32; 
-      --accent: #D4AF37; /* Elegant Gold */
+      --accent: #D4AF37; 
       --accent-soft: #F9E596; 
       --accent-hover: #AA8C2C;
       --text-main: #E2E8F0; 
@@ -93,7 +92,6 @@
       padding-right: 5px;
     }
 
-    /* Scrollbar minimalis */
     .grid-container::-webkit-scrollbar { width: 6px; }
     .grid-container::-webkit-scrollbar-track { background: rgba(255,255,255,0.02); border-radius: 10px;}
     .grid-container::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 10px; }
@@ -182,9 +180,9 @@
 
     /* KELAS KHUSUS LINK YANG SUDAH DIKLIK */
     .link-clicked {
-      opacity: 0.35 !important;
+      opacity: 0.4 !important;
       filter: grayscale(100%);
-      background: rgba(0,0,0,0.2) !important;
+      background: rgba(0,0,0,0.3) !important;
       border-color: transparent !important;
       box-shadow: none !important;
       transform: none !important;
@@ -193,7 +191,7 @@
     .link-clicked .badge-circle {
       background: rgba(255,255,255,0.1);
       border-color: rgba(255,255,255,0.2);
-      color: #aaa;
+      color: #888;
     }
     
     .status-icon {
@@ -202,6 +200,22 @@
     }
     .link-clicked .status-icon {
       color: var(--success);
+    }
+    
+    /* Tombol Reset Tracker */
+    .reset-btn {
+        background: transparent;
+        color: var(--text-muted);
+        border: 1px solid var(--text-muted);
+        border-radius: 6px;
+        padding: 4px 8px;
+        font-size: 0.7rem;
+        cursor: pointer;
+        transition: 0.2s;
+    }
+    .reset-btn:hover {
+        background: rgba(255,255,255,0.1);
+        color: #fff;
     }
   </style>
 </head>
@@ -246,7 +260,10 @@
       
       <div style="display:flex; justify-content:space-between; align-items:center; background: rgba(0,0,0,0.2); padding: 10px 15px; border-radius: 8px; margin-bottom:10px; border: 1px solid rgba(255,255,255,0.05);">
         <span style="font-size: 0.8rem; color:var(--text-muted);">Progress Terpakai:</span>
-        <span id="progress-info" style="font-size: 0.85rem; font-weight: 600; color:var(--accent-soft);">0 / 0</span>
+        <div style="display:flex; align-items:center; gap: 15px;">
+            <button class="reset-btn" onclick="resetUserTracker()">Reset User</button>
+            <span id="progress-info" style="font-size: 0.85rem; font-weight: 600; color:var(--accent-soft);">0 / 0</span>
+        </div>
       </div>
 
       <div id="links-grid" class="grid-container"></div>
@@ -254,46 +271,45 @@
   </div>
 
   <script>
-    
     const REGIONS = [
       {
         id: 'jabodetabek',
         name: 'JABODETABEK',
         users: [
-          { name: 'SRI SUWARTI', quota: 15 }, { name: 'SULASTRI', quota: 15 }, { name: 'RONDANG', quota: 15 }, { name: 'GRISELDA', quota: 15 },
-          { name: 'BEBI AGUSTIN', quota: 15 }, { name: 'EVIE BUNGAI', quota: 15 }, { name: 'PUTRI WAHYU', quota: 15 }, { name: 'ARI YULIAWATI', quota: 15 },
-          { name: 'DEWI CHOVIZO', quota: 15 }, { name: 'RIRIN NINI', quota: 15 }, { name: 'RISMA', quota: 15 }, { name: 'INDAH', quota: 15 },
-          { name: 'PUDJI', quota: 15 }, { name: 'AUDRY', quota: 15 }, { name: 'RENI', quota: 15 }, { name: 'KHOLIVYAH', quota: 15 }
+          { name: 'SRI SUWARTI', quota: 13 }, { name: 'SULASTRI', quota: 13 }, { name: 'RONDANG', quota: 13 }, { name: 'GRISELDA', quota: 13 },
+          { name: 'BEBI AGUSTIN', quota: 13 }, { name: 'EVIE BUNGAI', quota: 13 }, { name: 'PUTRI WAHYU', quota: 13 }, { name: 'ARI YULIAWATI', quota: 13 },
+          { name: 'DEWI CHOVIZO', quota: 9 }, { name: 'RIRIN NINI', quota: 9 }, { name: 'RISMA', quota: 9 }, { name: 'INDAH', quota: 9 },
+          { name: 'PUDJI', quota: 9 }, { name: 'AUDRY', quota: 9 }, { name: 'RENI', quota: 9 }, { name: 'KHOLIVYAH', quota: 9 }
         ]
       },
       {
         id: 'medan',
         name: 'MEDAN',
         users: [
-          { name: 'Rini Rita', quota: 15 }, { name: 'Era Wahyuni', quota: 15 }, { name: 'Merry', quota: 15 }, { name: 'Farida Hanum', quota: 15 }, { name: 'Morina', quota: 15 },
-          { name: 'Elvrilina / Lina', quota: 15 }, { name: 'Dorlina', quota: 15 }, { name: 'Siti Rohani', quota: 15 }, { name: 'Raja', quota: 15 }, { name: 'Edi Rianto', quota: 15 }
+          { name: 'Rini Rita', quota: 11 }, { name: 'Era Wahyuni', quota: 11 }, { name: 'Merry', quota: 11 }, { name: 'Farida Hanum', quota: 11 }, { name: 'Morina', quota: 11 },
+          { name: 'Elvrilina / Lina', quota: 11 }, { name: 'Dorlina', quota: 11 }, { name: 'Siti Rohani', quota: 11 }, { name: 'Raja', quota: 11 }, { name: 'Edi Rianto', quota: 11 }
         ]
       },
       {
         id: 'bali',
         name: 'BALI',
         users: [
-          { name: 'Novilia Ayu', quota: 15 }, { name: 'Indah W', quota: 15 }, { name: 'Rianty', quota: 15 }, { name: 'Danthi', quota: 15 }, { name: 'Dita A', quota: 15 },
-          { name: 'Made Edy', quota: 15 }, { name: 'Diah Fida', quota: 15 }, { name: 'Kadek Dyah', quota: 15 }, { name: 'Wayan Cenik', quota: 15 }, { name: 'Amini', quota: 15 }
+          { name: 'Novilia Ayu', quota: 14 }, { name: 'Indah W', quota: 14 }, { name: 'Rianty', quota: 14 }, { name: 'Danthi', quota: 14 }, { name: 'Dita A', quota: 14 },
+          { name: 'Made Edy', quota: 14 }, { name: 'Diah Fida', quota: 14 }, { name: 'Kadek Dyah', quota: 14 }, { name: 'Wayan Cenik', quota: 14 }, { name: 'Amini', quota: 14 }
         ]
       },
       {
         id: 'samarinda',
         name: 'SAMARINDA',
         users: [
-          { name: 'AGIK ELVANDI', quota: 15 }, { name: 'MAYASARI', quota: 15 }, { name: 'KODIR', quota: 15 }
+          { name: 'AGIK ELVANDI', quota: 4 }, { name: 'MAYASARI', quota: 4 }, { name: 'KODIR', quota: 4 }
         ]
       },
       {
         id: 'makasar',
         name: 'MAKASAR',
         users: [
-          { name: 'Tenri', quota: 15 }, { name: 'Surialam', quota: 15 }, { name: 'Nilawati', quota: 15 }
+          { name: 'Tenri', quota: 4 }, { name: 'Surialam', quota: 4 }, { name: 'Nilawati', quota: 4 }
         ]
       },
       {
@@ -313,7 +329,6 @@
         ]
       }
     ];
-
 
     const RAW_CONTENT = `https://survey3.acornasia.com/s3/6f57e50fd4a9/i-8MKnA5CXJWB1SBkkB5-8938840/?sguid=8MKnA5CXJWB1SBkkB5
 https://survey3.acornasia.com/s3/6f57e50fd4a9/i-adG3RaimnXdPCv44vW-8938840/?sguid=adG3RaimnXdPCv44vW
@@ -869,7 +884,28 @@ https://survey3.acornasia.com/s3/6f57e50fd4a9/i-e0p8ojhZExDVSxqqxp-8938840/?sgui
 https://survey3.acornasia.com/s3/6f57e50fd4a9/i-Kd65gqCbwzgKiQGGQk-8938840/?sguid=Kd65gqCbwzgKiQGGQk
 https://survey3.acornasia.com/s3/6f57e50fd4a9/i-Ae3aOLC62MdLcWeeWO-8938840/?sguid=Ae3aOLC62MdLcWeeWO
 https://survey3.acornasia.com/s3/6f57e50fd4a9/i-bdOv9Kubex4Pie22ep-8938840/?sguid=bdOv9Kubex4Pie22ep
-https://survey3.acornasia.com/s3/6f57e50fd4a9/i-G8R4oxcWjqDetmWWmR-8938840/?sguid=G8R4oxcWjqDetmWWmR`;
+https://survey3.acornasia.com/s3/6f57e50fd4a9/i-G8R4oxcWjqDetmWWmR-8938840/?sguid=G8R4oxcWjqDetmWWmR
+https://survey3.acornasia.com/s3/6f57e50fd4a9/i-Odz5QpsJ5RQ7tLKKLk-8938840/?sguid=Odz5QpsJ5RQ7tLKKLk
+https://survey3.acornasia.com/s3/6f57e50fd4a9/i-8MKnkoFXJWB1SBkkB5-8938840/?sguid=8MKnkoFXJWB1SBkkB5
+https://survey3.acornasia.com/s3/6f57e50fd4a9/i-adG3a3tmnXdPCv44vW-8938840/?sguid=adG3a3tmnXdPCv44vW
+https://survey3.acornasia.com/s3/6f57e50fd4a9/i-pZdAYacvMQw4FbQQbd-8938840/?sguid=pZdAYacvMQw4FbQQbd
+https://survey3.acornasia.com/s3/6f57e50fd4a9/i-7Ve1ZBsQG195iDEEDJ-8938840/?sguid=7Ve1ZBsQG195iDEEDJ
+https://survey3.acornasia.com/s3/6f57e50fd4a9/i-3zknMAcLvDQZS8dd85-8938840/?sguid=3zknMAcLvDQZS8dd85
+https://survey3.acornasia.com/s3/6f57e50fd4a9/i-oBDP9RCVZqOpC1kk1g-8938840/?sguid=oBDP9RCVZqOpC1kk1g
+https://survey3.acornasia.com/s3/6f57e50fd4a9/i-vKj3EmCm9OK6Coggod-8938840/?sguid=vKj3EmCm9OK6Coggod
+https://survey3.acornasia.com/s3/6f57e50fd4a9/i-wAx6nzh5GO3aFL66Ld-8938840/?sguid=wAx6nzh5GO3aFL66Ld
+https://survey3.acornasia.com/s3/6f57e50fd4a9/i-5xEnWzUG7mMVC9OO9W-8938840/?sguid=5xEnWzUG7mMVC9OO9W
+https://survey3.acornasia.com/s3/6f57e50fd4a9/i-PdjRVECZvM5JSqggq5-8938840/?sguid=PdjRVECZvM5JSqggq5
+https://survey3.acornasia.com/s3/6f57e50fd4a9/i-RLQ5Y6SJ0vYLt0OO0G-8938840/?sguid=RLQ5Y6SJ0vYLt0OO0G
+https://survey3.acornasia.com/s3/6f57e50fd4a9/i-4j2GYdumADaPCK99KY-8938840/?sguid=4j2GYdumADaPCK99KY
+https://survey3.acornasia.com/s3/6f57e50fd4a9/i-DbwapYc12R4mtGOOG1-8938840/?sguid=DbwapYc12R4mtGOOG1
+https://survey3.acornasia.com/s3/6f57e50fd4a9/i-dda83dsEZP1DFxRRxv-8938840/?sguid=dda83dsEZP1DFxRRxv
+https://survey3.acornasia.com/s3/6f57e50fd4a9/i-6Qn7BgU4v8bncLGGL5-8938840/?sguid=6Qn7BgU4v8bncLGGL5
+https://survey3.acornasia.com/s3/6f57e50fd4a9/i-LdL5zDtLW5z6SPqqP9-8938840/?sguid=LdL5zDtLW5z6SPqqP9
+https://survey3.acornasia.com/s3/6f57e50fd4a9/i-mYRAQMiYJGwxtAxxA7-8938840/?sguid=mYRAQMiYJGwxtAxxA7
+https://survey3.acornasia.com/s3/6f57e50fd4a9/i-J7d500s6ax08c3vv3G-8938840/?sguid=J7d500s6ax08c3vv3G
+https://survey3.acornasia.com/s3/6f57e50fd4a9/i-qk6AWaUgA5LEiKggKj-8938840/?sguid=qk6AWaUgA5LEiKggKj`;
+
     const ALL_LINKS = RAW_CONTENT.split('\n').map(l => l.trim()).filter(l => l !== "" && l.includes("http"));
 
     let linkIndex = 0;
@@ -898,19 +934,21 @@ https://survey3.acornasia.com/s3/6f57e50fd4a9/i-G8R4oxcWjqDetmWWmR-8938840/?sgui
       };
     });
 
-    // Fitur Tracker Link
+    // State Penyimpanan
+    let currentRIdx = null;
+    let currentIIdx = null;
+
     function getClickedLinks() {
-      return JSON.parse(localStorage.getItem('kamarah_clicked_links_v2') || '[]');
+      return JSON.parse(localStorage.getItem('kamarah_clicked_links_v3') || '[]');
     }
 
     function markAsClicked(link, elementId, rIdx, iIdx) {
       let clicked = getClickedLinks();
       if (!clicked.includes(link)) {
         clicked.push(link);
-        localStorage.setItem('kamarah_clicked_links_v2', JSON.stringify(clicked));
+        localStorage.setItem('kamarah_clicked_links_v3', JSON.stringify(clicked));
       }
       
-      // Update UI langsung tanpa render ulang
       const btn = document.getElementById(elementId);
       if(btn) {
         btn.classList.add('link-clicked');
@@ -920,6 +958,23 @@ https://survey3.acornasia.com/s3/6f57e50fd4a9/i-G8R4oxcWjqDetmWWmR-8938840/?sgui
       
       updateProgressUI(rIdx, iIdx);
       window.open(link, '_blank');
+    }
+    
+    function resetUserTracker() {
+        if(currentRIdx === null || currentIIdx === null) return;
+        
+        const confirmReset = confirm("Anda yakin ingin mereset progress link user ini? Warna link akan kembali seperti semula.");
+        if(!confirmReset) return;
+
+        let clicked = getClickedLinks();
+        const userLinks = finalData[currentRIdx].interviewers[currentIIdx].links;
+        
+        // Remove user's links from clicked array
+        clicked = clicked.filter(link => !userLinks.includes(link));
+        localStorage.setItem('kamarah_clicked_links_v3', JSON.stringify(clicked));
+        
+        // Re-render
+        renderLinks(currentRIdx, currentIIdx);
     }
 
     function updateProgressUI(rIdx, iIdx) {
@@ -991,6 +1046,9 @@ https://survey3.acornasia.com/s3/6f57e50fd4a9/i-G8R4oxcWjqDetmWWmR-8938840/?sgui
     }
 
     function renderLinks(rIdx, iIdx) {
+      currentRIdx = rIdx;
+      currentIIdx = iIdx;
+      
       const region = finalData[rIdx];
       const intv = region.interviewers[iIdx];
       const clickedLinks = getClickedLinks();
@@ -1069,7 +1127,7 @@ https://survey3.acornasia.com/s3/6f57e50fd4a9/i-G8R4oxcWjqDetmWWmR-8938840/?sgui
     });
 
     window.onload = () => {
-      document.getElementById('total-info').innerText = `Total Data: ${linkIndex} Link didistribusikan.`;
+      document.getElementById('total-info').innerText = `Total Data: ${linkIndex} Link diaktifkan untuk operasional.`;
       renderRegions();
       showView('view-welcome');
     };
