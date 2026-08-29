@@ -3,107 +3,317 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Project KAMARAH - Survey Panel</title>
+  <title>Project KAMARAH - Executive Survey Panel</title>
   <style>
-    @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap");
-    :root { --bg-main: #020617; --bg-card: #0f172a; --accent: #2563eb; --accent-soft: #60a5fa; --text-main: #e5e7eb; --text-muted: #9ca3af; }
-    body { margin: 0; padding: 20px; min-height: 100vh; font-family: "Poppins", sans-serif; background: radial-gradient(circle at top left, rgba(148, 163, 184, 0.3), transparent 60%), linear-gradient(135deg, var(--bg-main), #000); color: var(--text-main); }
-    .app-shell { max-width: 520px; margin: 0 auto; border-radius: 24px; background: var(--bg-card); border: 1px solid rgba(148, 163, 184, 0.4); box-shadow: 0 24px 60px rgba(0, 0, 0, 0.9); padding: 20px; position: relative; }
-    .btn-primary { background: linear-gradient(135deg, var(--accent), var(--accent-soft)); border: none; color: #fff; padding: 12px; border-radius: 999px; width: 100%; cursor: pointer; font-weight: 600; margin-top: 10px; }
-    .grid-container { display: grid; grid-template-columns: 1fr; gap: 10px; margin-top: 15px; }
-    .card-item { display: flex; align-items: center; gap: 12px; padding: 12px; border-radius: 14px; border: 1px solid rgba(148, 163, 184, 0.3); background: rgba(255,255,255,0.05); color: #fff; text-align: left; cursor: pointer; transition: 0.2s; width: 100%; box-sizing: border-box; }
-    .card-item:hover { background: rgba(255,255,255,0.1); border-color: var(--accent-soft); transform: translateY(-2px); }
-    .badge-circle { min-width: 30px; height: 30px; border-radius: 50%; background: var(--accent); display: flex; align-items: center; justify-content: center; font-size: 0.8rem; font-weight: bold; }
-    .back-link { color: var(--accent-soft); cursor: pointer; background: none; border: none; margin-bottom: 10px; padding: 0; font-size: 0.9rem; }
-    h3 { margin-top: 5px; border-left: 4px solid var(--accent); padding-left: 10px; margin-bottom: 10px;}
-    .search-box { width: 100%; padding: 12px 15px; border-radius: 999px; border: 1px solid rgba(148, 163, 184, 0.5); background: rgba(15, 23, 42, 0.9); color: var(--text-main); font-family: inherit; font-size: 0.85rem; outline: none; transition: 0.2s; box-sizing: border-box; margin-bottom: 15px; }
-    .search-box:focus { border-color: var(--accent-soft); box-shadow: 0 0 0 2px rgba(96, 165, 250, 0.2); }
+    @import url("https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=Plus+Jakarta+Sans:wght@300;400;600&display=swap");
+    
+    :root { 
+      /* Tema Asuransi Premium (Navy & Gold/Silver) */
+      --bg-main: #0B1121; 
+      --bg-card: #151F32; 
+      --accent: #D4AF37; /* Elegant Gold */
+      --accent-soft: #F9E596; 
+      --accent-hover: #AA8C2C;
+      --text-main: #E2E8F0; 
+      --text-muted: #94A3B8; 
+      --border-color: rgba(212, 175, 55, 0.2);
+      --success: #10B981;
+    }
+
+    body { 
+      margin: 0; 
+      padding: 20px; 
+      min-height: 100vh; 
+      font-family: 'Plus Jakarta Sans', sans-serif; 
+      background: radial-gradient(circle at top right, rgba(212, 175, 55, 0.08), transparent 50%), 
+                  linear-gradient(135deg, var(--bg-main), #050811); 
+      color: var(--text-main); 
+    }
+
+    .app-shell { 
+      max-width: 540px; 
+      margin: 0 auto; 
+      border-radius: 20px; 
+      background: rgba(21, 31, 50, 0.85); 
+      backdrop-filter: blur(12px);
+      border: 1px solid var(--border-color); 
+      box-shadow: 0 30px 60px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255,255,255,0.1); 
+      padding: 25px; 
+      position: relative; 
+    }
+
+    .header-logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 0.75rem;
+      color: var(--accent);
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 10px;
+      margin-bottom: 15px;
+      display: inline-block;
+    }
+
+    h1 { 
+      font-family: 'Playfair Display', serif;
+      font-size: 1.8rem; 
+      margin: 5px 0; 
+      color: #fff;
+      font-weight: 700;
+    }
+
+    .btn-primary { 
+      background: linear-gradient(135deg, var(--accent), var(--accent-hover)); 
+      border: none; 
+      color: #000; 
+      padding: 14px; 
+      border-radius: 12px; 
+      width: 100%; 
+      cursor: pointer; 
+      font-weight: 600; 
+      margin-top: 15px; 
+      font-family: inherit;
+      font-size: 0.95rem;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
+    }
+    
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(212, 175, 55, 0.4);
+    }
+
+    .grid-container { 
+      display: grid; 
+      grid-template-columns: 1fr; 
+      gap: 12px; 
+      margin-top: 15px; 
+      max-height: 65vh;
+      overflow-y: auto;
+      padding-right: 5px;
+    }
+
+    /* Scrollbar minimalis */
+    .grid-container::-webkit-scrollbar { width: 6px; }
+    .grid-container::-webkit-scrollbar-track { background: rgba(255,255,255,0.02); border-radius: 10px;}
+    .grid-container::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 10px; }
+
+    .card-item { 
+      display: flex; 
+      align-items: center; 
+      gap: 15px; 
+      padding: 15px; 
+      border-radius: 14px; 
+      border: 1px solid rgba(255,255,255,0.05); 
+      background: linear-gradient(145deg, rgba(255,255,255,0.03), transparent); 
+      color: #fff; 
+      text-align: left; 
+      cursor: pointer; 
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); 
+      width: 100%; 
+      box-sizing: border-box; 
+      font-family: inherit;
+    }
+
+    .card-item:hover { 
+      background: rgba(212, 175, 55, 0.08); 
+      border-color: var(--accent); 
+      transform: translateY(-2px); 
+    }
+
+    .badge-circle { 
+      min-width: 34px; 
+      height: 34px; 
+      border-radius: 50%; 
+      background: rgba(212, 175, 55, 0.15); 
+      border: 1px solid var(--accent);
+      color: var(--accent-soft);
+      display: flex; 
+      align-items: center; 
+      justify-content: center; 
+      font-size: 0.85rem; 
+      font-weight: 600; 
+    }
+
+    .back-link { 
+      color: var(--text-muted); 
+      cursor: pointer; 
+      background: none; 
+      border: none; 
+      margin-bottom: 10px; 
+      padding: 0; 
+      font-size: 0.85rem; 
+      font-family: inherit;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      transition: color 0.2s;
+    }
+    .back-link:hover { color: var(--accent); }
+
+    h3 { 
+      font-family: 'Playfair Display', serif;
+      margin-top: 5px; 
+      border-left: 3px solid var(--accent); 
+      padding-left: 12px; 
+      margin-bottom: 15px;
+      font-weight: 500;
+      color: #fff;
+    }
+
+    .search-box { 
+      width: 100%; 
+      padding: 14px 18px; 
+      border-radius: 12px; 
+      border: 1px solid rgba(255,255,255,0.1); 
+      background: rgba(0,0,0,0.3); 
+      color: var(--text-main); 
+      font-family: inherit; 
+      font-size: 0.9rem; 
+      outline: none; 
+      transition: 0.3s; 
+      box-sizing: border-box; 
+      margin-bottom: 15px; 
+    }
+    .search-box:focus { 
+      border-color: var(--accent); 
+      box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.15); 
+    }
+
+    /* KELAS KHUSUS LINK YANG SUDAH DIKLIK */
+    .link-clicked {
+      opacity: 0.35 !important;
+      filter: grayscale(100%);
+      background: rgba(0,0,0,0.2) !important;
+      border-color: transparent !important;
+      box-shadow: none !important;
+      transform: none !important;
+    }
+    
+    .link-clicked .badge-circle {
+      background: rgba(255,255,255,0.1);
+      border-color: rgba(255,255,255,0.2);
+      color: #aaa;
+    }
+    
+    .status-icon {
+      font-size: 1.1rem;
+      margin-left: 10px;
+    }
+    .link-clicked .status-icon {
+      color: var(--success);
+    }
   </style>
 </head>
 <body>
   <div class="app-shell">
     <div id="view-welcome">
-      <div style="font-size: 0.7rem; color: var(--accent-soft); letter-spacing: 2px;">ACORN CONSULTANT</div>
-      <h1 style="font-size:1.6rem; margin: 5px 0;">Project KAMARAH<br>Survey Hub</h1>
-      <p style="color:var(--text-muted); font-size: 0.85rem;" id="total-info">Distribusi link spesifik per wilayah dan interviewer.</p>
-      <button class="btn-primary" onclick="showView('view-regions')">MASUK DASHBOARD</button>
+      <div class="header-logo">ACORN CONSULTANT</div>
+      <h1>Project KAMARAH</h1>
+      <p style="color:var(--accent-soft); font-size: 0.9rem; margin-top:0;">Executive Survey Hub</p>
+      <p style="color:var(--text-muted); font-size: 0.85rem; line-height: 1.5;" id="total-info">
+        Distribusi spesifik panel link untuk operasional interview.
+      </p>
+      <button class="btn-primary" onclick="showView('view-regions')">Akses Dashboard</button>
     </div>
 
     <div id="view-regions" style="display:none;">
-      <button class="back-link" onclick="showView('view-welcome')">← Kembali</button>
-      <h3>Pilih Wilayah atau Cari</h3>
-      <input type="text" id="input-search" class="search-box" placeholder="Ketik nama wilayah atau interviewer..." autocomplete="off">
+      <button class="back-link" onclick="showView('view-welcome')">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+        Kembali
+      </button>
+      <h3>Pilih Wilayah Operasional</h3>
+      <input type="text" id="input-search" class="search-box" placeholder="Cari wilayah atau nama interviewer..." autocomplete="off">
       <div id="search-results-grid" class="grid-container" style="display:none;"></div>
       <div id="regions-grid" class="grid-container"></div>
     </div>
 
     <div id="view-interviewers" style="display:none;">
-      <button id="btn-back-to-prev" class="back-link" onclick="showView('view-regions')">← Kembali</button>
+      <button id="btn-back-to-prev" class="back-link" onclick="showView('view-regions')">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+        Kembali ke Wilayah
+      </button>
       <h3 id="location-title-for-interviewer"></h3>
       <div id="interviewers-grid" class="grid-container"></div>
     </div>
 
     <div id="view-links" style="display:none;">
-      <button id="btn-back-to-interviewers" class="back-link">← Pilih Interviewer</button>
+      <button id="btn-back-to-interviewers" class="back-link">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+        Daftar Interviewer
+      </button>
       <h3 id="interviewer-title"></h3>
+      
+      <div style="display:flex; justify-content:space-between; align-items:center; background: rgba(0,0,0,0.2); padding: 10px 15px; border-radius: 8px; margin-bottom:10px; border: 1px solid rgba(255,255,255,0.05);">
+        <span style="font-size: 0.8rem; color:var(--text-muted);">Progress Terpakai:</span>
+        <span id="progress-info" style="font-size: 0.85rem; font-weight: 600; color:var(--accent-soft);">0 / 0</span>
+      </div>
+
       <div id="links-grid" class="grid-container"></div>
     </div>
   </div>
 
   <script>
+    
     const REGIONS = [
       {
         id: 'jabodetabek',
         name: 'JABODETABEK',
         users: [
-          { name: 'SRI SUWARTI', quota: 13 }, { name: 'SULASTRI', quota: 13 }, { name: 'RONDANG', quota: 13 }, { name: 'GRISELDA', quota: 13 },
-          { name: 'BEBI AGUSTIN', quota: 13 }, { name: 'EVIE BUNGAI', quota: 13 }, { name: 'PUTRI WAHYU', quota: 13 }, { name: 'ARI YULIAWATI', quota: 13 },
-          { name: 'DEWI CHOVIZO', quota: 9 }, { name: 'RIRIN NINI', quota: 9 }, { name: 'RISMA', quota: 9 }, { name: 'INDAH', quota: 9 },
-          { name: 'PUDJI', quota: 9 }, { name: 'AUDRY', quota: 9 }, { name: 'RENI', quota: 9 }, { name: 'KHOLIVYAH', quota: 9 }
+          { name: 'SRI SUWARTI', quota: 15 }, { name: 'SULASTRI', quota: 15 }, { name: 'RONDANG', quota: 15 }, { name: 'GRISELDA', quota: 15 },
+          { name: 'BEBI AGUSTIN', quota: 15 }, { name: 'EVIE BUNGAI', quota: 15 }, { name: 'PUTRI WAHYU', quota: 15 }, { name: 'ARI YULIAWATI', quota: 15 },
+          { name: 'DEWI CHOVIZO', quota: 15 }, { name: 'RIRIN NINI', quota: 15 }, { name: 'RISMA', quota: 15 }, { name: 'INDAH', quota: 15 },
+          { name: 'PUDJI', quota: 15 }, { name: 'AUDRY', quota: 15 }, { name: 'RENI', quota: 15 }, { name: 'KHOLIVYAH', quota: 15 }
         ]
       },
       {
         id: 'medan',
         name: 'MEDAN',
         users: [
-          { name: 'Rini Rita', quota: 11 }, { name: 'Era Wahyuni', quota: 11 }, { name: 'Merry', quota: 11 }, { name: 'Farida Hanum', quota: 11 }, { name: 'Morina', quota: 11 },
-          { name: 'Elvrilina / Lina', quota: 11 }, { name: 'Dorlina', quota: 11 }, { name: 'Siti Rohani', quota: 11 }, { name: 'Raja', quota: 11 }, { name: 'Edi Rianto', quota: 11 }
+          { name: 'Rini Rita', quota: 15 }, { name: 'Era Wahyuni', quota: 15 }, { name: 'Merry', quota: 15 }, { name: 'Farida Hanum', quota: 15 }, { name: 'Morina', quota: 15 },
+          { name: 'Elvrilina / Lina', quota: 15 }, { name: 'Dorlina', quota: 15 }, { name: 'Siti Rohani', quota: 15 }, { name: 'Raja', quota: 15 }, { name: 'Edi Rianto', quota: 15 }
         ]
       },
       {
         id: 'bali',
         name: 'BALI',
         users: [
-          { name: 'Novilia Ayu', quota: 14 }, { name: 'Indah W', quota: 14 }, { name: 'Rianty', quota: 14 }, { name: 'Danthi', quota: 14 }, { name: 'Dita A', quota: 14 },
-          { name: 'Made Edy', quota: 14 }, { name: 'Diah Fida', quota: 14 }, { name: 'Kadek Dyah', quota: 14 }, { name: 'Wayan Cenik', quota: 14 }, { name: 'Amini', quota: 14 }
+          { name: 'Novilia Ayu', quota: 15 }, { name: 'Indah W', quota: 15 }, { name: 'Rianty', quota: 15 }, { name: 'Danthi', quota: 15 }, { name: 'Dita A', quota: 15 },
+          { name: 'Made Edy', quota: 15 }, { name: 'Diah Fida', quota: 15 }, { name: 'Kadek Dyah', quota: 15 }, { name: 'Wayan Cenik', quota: 15 }, { name: 'Amini', quota: 15 }
         ]
       },
       {
         id: 'samarinda',
         name: 'SAMARINDA',
         users: [
-          { name: 'AGIK ELVANDI', quota: 4 }, { name: 'MAYASARI', quota: 4 }, { name: 'KODIR', quota: 4 }
+          { name: 'AGIK ELVANDI', quota: 15 }, { name: 'MAYASARI', quota: 15 }, { name: 'KODIR', quota: 15 }
         ]
       },
       {
         id: 'makasar',
         name: 'MAKASAR',
         users: [
-          { name: 'Tenri', quota: 4 }, { name: 'Surialam', quota: 4 }, { name: 'Nilawati', quota: 4 }
+          { name: 'Tenri', quota: 15 }, { name: 'Surialam', quota: 15 }, { name: 'Nilawati', quota: 15 }
         ]
       },
       {
         id: 'cadangan',
         name: 'CADANGAN',
         users: [
-          { name: 'Jenny (Medan)', quota: 11 },
-          { name: 'null 1', quota: 11 },
-          { name: 'null 2', quota: 11 },
-          { name: 'null 3', quota: 11 },
-          { name: 'null 4', quota: 11 }
+          { name: 'Jenny (Medan)', quota: 15 },
+          { name: 'null 1', quota: 15 },
+          { name: 'null 2', quota: 15 },
+          { name: 'null 3', quota: 15 },
+          { name: 'null 4', quota: 15 },
+          { name: 'null 6', quota: 10 },
+          { name: 'null 7', quota: 10 },
+          { name: 'null 8', quota: 10 },
+          { name: 'null 9', quota: 10 },
+          { name: 'null 10', quota: 10 }
         ]
       }
     ];
+
 
     const RAW_CONTENT = `https://survey3.acornasia.com/s3/6f57e50fd4a9/i-8MKnA5CXJWB1SBkkB5-8938840/?sguid=8MKnA5CXJWB1SBkkB5
 https://survey3.acornasia.com/s3/6f57e50fd4a9/i-adG3RaimnXdPCv44vW-8938840/?sguid=adG3RaimnXdPCv44vW
@@ -609,8 +819,57 @@ https://survey3.acornasia.com/s3/6f57e50fd4a9/i-8MKn5RSXJWB1SBkkB5-8938840/?sgui
 https://survey3.acornasia.com/s3/6f57e50fd4a9/i-adG3pZimnXdPCv44vW-8938840/?sguid=adG3pZimnXdPCv44vW
 https://survey3.acornasia.com/s3/6f57e50fd4a9/i-pZdABocvMQw4FbQQbd-8938840/?sguid=pZdABocvMQw4FbQQbd
 https://survey3.acornasia.com/s3/6f57e50fd4a9/i-7Ve1q0tQG195iDEEDJ-8938840/?sguid=7Ve1q0tQG195iDEEDJ
-https://survey3.acornasia.com/s3/6f57e50fd4a9/i-3zkn6KTLvDQZS8dd85-8938840/?sguid=3zkn6KTLvDQZS8dd85`;
-
+https://survey3.acornasia.com/s3/6f57e50fd4a9/i-3zkn6KTLvDQZS8dd85-8938840/?sguid=3zkn6KTLvDQZS8dd85
+https://survey3.acornasia.com/s3/6f57e50fd4a9/i-oBDPWGCVZqOpC1kk1g-8938840/?sguid=oBDPWGCVZqOpC1kk1g
+https://survey3.acornasia.com/s3/6f57e50fd4a9/i-vKj3eJUm9OK6Coggod-8938840/?sguid=vKj3eJUm9OK6Coggod
+https://survey3.acornasia.com/s3/6f57e50fd4a9/i-wAx6KJh5GO3aFL66Ld-8938840/?sguid=wAx6KJh5GO3aFL66Ld
+https://survey3.acornasia.com/s3/6f57e50fd4a9/i-5xEn5qHG7mMVC9OO9W-8938840/?sguid=5xEn5qHG7mMVC9OO9W
+https://survey3.acornasia.com/s3/6f57e50fd4a9/i-PdjRMwuZvM5JSqggq5-8938840/?sguid=PdjRMwuZvM5JSqggq5
+https://survey3.acornasia.com/s3/6f57e50fd4a9/i-RLQ5WxhJ0vYLt0OO0G-8938840/?sguid=RLQ5WxhJ0vYLt0OO0G
+https://survey3.acornasia.com/s3/6f57e50fd4a9/i-4j2G50FmADaPCK99KY-8938840/?sguid=4j2G50FmADaPCK99KY
+https://survey3.acornasia.com/s3/6f57e50fd4a9/i-Dbwa5Rc12R4mtGOOG1-8938840/?sguid=Dbwa5Rc12R4mtGOOG1
+https://survey3.acornasia.com/s3/6f57e50fd4a9/i-dda8o8tEZP1DFxRRxv-8938840/?sguid=dda8o8tEZP1DFxRRxv
+https://survey3.acornasia.com/s3/6f57e50fd4a9/i-6Qn75Yu4v8bncLGGL5-8938840/?sguid=6Qn75Yu4v8bncLGGL5
+https://survey3.acornasia.com/s3/6f57e50fd4a9/i-LdL5jniLW5z6SPqqP9-8938840/?sguid=LdL5jniLW5z6SPqqP9
+https://survey3.acornasia.com/s3/6f57e50fd4a9/i-mYRAMBiYJGwxtAxxA7-8938840/?sguid=mYRAMBiYJGwxtAxxA7
+https://survey3.acornasia.com/s3/6f57e50fd4a9/i-J7d5g8S6ax08c3vv3G-8938840/?sguid=J7d5g8S6ax08c3vv3G
+https://survey3.acornasia.com/s3/6f57e50fd4a9/i-qk6A9qCgA5LEiKggKj-8938840/?sguid=qk6A9qCgA5LEiKggKj
+https://survey3.acornasia.com/s3/6f57e50fd4a9/i-10Bn5of1APjDtG55GQ-8938840/?sguid=10Bn5of1APjDtG55GQ
+https://survey3.acornasia.com/s3/6f57e50fd4a9/i-XdZ8n1HARdJVf6DD60-8938840/?sguid=XdZ8n1HARdJVf6DD60
+https://survey3.acornasia.com/s3/6f57e50fd4a9/i-9YAnXPH1mkZetYooYX-8938840/?sguid=9YAnXPH1mkZetYooYX
+https://survey3.acornasia.com/s3/6f57e50fd4a9/i-07WnqZhDOmz5IQvvQR-8938840/?sguid=07WnqZhDOmz5IQvvQR
+https://survey3.acornasia.com/s3/6f57e50fd4a9/i-gz37gntdYxAQhEmmEk-8938840/?sguid=gz37gntdYxAQhEmmEk
+https://survey3.acornasia.com/s3/6f57e50fd4a9/i-zOMKGdh6D5VOcmeemk-8938840/?sguid=zOMKGdh6D5VOcmeemk
+https://survey3.acornasia.com/s3/6f57e50fd4a9/i-jQwXxQujYkLJiKRRKA-8938840/?sguid=jQwXxQujYkLJiKRRKA
+https://survey3.acornasia.com/s3/6f57e50fd4a9/i-xbQJA2cXkaKYSmAAmd-8938840/?sguid=xbQJA2cXkaKYSmAAmd
+https://survey3.acornasia.com/s3/6f57e50fd4a9/i-Qdx5Y9tYbdMOtJjjJ9-8938840/?sguid=Qdx5Y9tYbdMOtJjjJ9
+https://survey3.acornasia.com/s3/6f57e50fd4a9/i-VdWq22Ivx05kFXxxXm-8938840/?sguid=VdWq22Ivx05kFXxxXm
+https://survey3.acornasia.com/s3/6f57e50fd4a9/i-Md0Lxjiwne51F1EE19-8938840/?sguid=Md0Lxjiwne51F1EE19
+https://survey3.acornasia.com/s3/6f57e50fd4a9/i-Ydk8e5hOR9p2fbmmbo-8938840/?sguid=Ydk8e5hOR9p2fbmmbo
+https://survey3.acornasia.com/s3/6f57e50fd4a9/i-10Bn5PF1APjDtG55GQ-8938840/?sguid=10Bn5PF1APjDtG55GQ
+https://survey3.acornasia.com/s3/6f57e50fd4a9/i-XdZ8nkhARdJVf6DD60-8938840/?sguid=XdZ8nkhARdJVf6DD60
+https://survey3.acornasia.com/s3/6f57e50fd4a9/i-9YAnXET1mkZetYooYX-8938840/?sguid=9YAnXET1mkZetYooYX
+https://survey3.acornasia.com/s3/6f57e50fd4a9/i-07WnqYIDOmz5IQvvQR-8938840/?sguid=07WnqYIDOmz5IQvvQR
+https://survey3.acornasia.com/s3/6f57e50fd4a9/i-gz37gBsdYxAQhEmmEk-8938840/?sguid=gz37gBsdYxAQhEmmEk
+https://survey3.acornasia.com/s3/6f57e50fd4a9/i-zOMKGgI6D5VOcmeemk-8938840/?sguid=zOMKGgI6D5VOcmeemk
+https://survey3.acornasia.com/s3/6f57e50fd4a9/i-jQwXxwCjYkLJiKRRKA-8938840/?sguid=jQwXxwCjYkLJiKRRKA
+https://survey3.acornasia.com/s3/6f57e50fd4a9/i-xbQJAKHXkaKYSmAAmd-8938840/?sguid=xbQJAKHXkaKYSmAAmd
+https://survey3.acornasia.com/s3/6f57e50fd4a9/i-Qdx5Y7uYbdMOtJjjJ9-8938840/?sguid=Qdx5Y7uYbdMOtJjjJ9
+https://survey3.acornasia.com/s3/6f57e50fd4a9/i-VdWq2ESvx05kFXxxXm-8938840/?sguid=VdWq2ESvx05kFXxxXm
+https://survey3.acornasia.com/s3/6f57e50fd4a9/i-Md0LxYswne51F1EE19-8938840/?sguid=Md0LxYswne51F1EE19
+https://survey3.acornasia.com/s3/6f57e50fd4a9/i-Ydk8eVUOR9p2fbmmbo-8938840/?sguid=Ydk8eVUOR9p2fbmmbo
+https://survey3.acornasia.com/s3/6f57e50fd4a9/i-WdB62wtwQb5vFGjjGn-8938840/?sguid=WdB62wtwQb5vFGjjGn
+https://survey3.acornasia.com/s3/6f57e50fd4a9/i-BKo48EcBE6D9iYLLYM-8938840/?sguid=BKo48EcBE6D9iYLLYM
+https://survey3.acornasia.com/s3/6f57e50fd4a9/i-Zd28ewi09KpmFkAAkw-8938840/?sguid=Zd28ewi09KpmFkAAkw
+https://survey3.acornasia.com/s3/6f57e50fd4a9/i-kV5Aj1UL2DwkS4jj4q-8938840/?sguid=kV5Aj1UL2DwkS4jj4q
+https://survey3.acornasia.com/s3/6f57e50fd4a9/i-2gZJVWF3v07MiXooX5-8938840/?sguid=2gZJVWF3v07MiXooX5
+https://survey3.acornasia.com/s3/6f57e50fd4a9/i-EG5a7MTxR2dvSxJJxq-8938840/?sguid=EG5a7MTxR2dvSxJJxq
+https://survey3.acornasia.com/s3/6f57e50fd4a9/i-nW4AVLCjk8wAi74470-8938840/?sguid=nW4AVLCjk8wAi74470
+https://survey3.acornasia.com/s3/6f57e50fd4a9/i-e0p8ojhZExDVSxqqxp-8938840/?sguid=e0p8ojhZExDVSxqqxp
+https://survey3.acornasia.com/s3/6f57e50fd4a9/i-Kd65gqCbwzgKiQGGQk-8938840/?sguid=Kd65gqCbwzgKiQGGQk
+https://survey3.acornasia.com/s3/6f57e50fd4a9/i-Ae3aOLC62MdLcWeeWO-8938840/?sguid=Ae3aOLC62MdLcWeeWO
+https://survey3.acornasia.com/s3/6f57e50fd4a9/i-bdOv9Kubex4Pie22ep-8938840/?sguid=bdOv9Kubex4Pie22ep
+https://survey3.acornasia.com/s3/6f57e50fd4a9/i-G8R4oxcWjqDetmWWmR-8938840/?sguid=G8R4oxcWjqDetmWWmR`;
     const ALL_LINKS = RAW_CONTENT.split('\n').map(l => l.trim()).filter(l => l !== "" && l.includes("http"));
 
     let linkIndex = 0;
@@ -639,7 +898,42 @@ https://survey3.acornasia.com/s3/6f57e50fd4a9/i-3zkn6KTLvDQZS8dd85-8938840/?sgui
       };
     });
 
-    console.log("Total Links Terdistribusi:", linkIndex);
+    // Fitur Tracker Link
+    function getClickedLinks() {
+      return JSON.parse(localStorage.getItem('kamarah_clicked_links_v2') || '[]');
+    }
+
+    function markAsClicked(link, elementId, rIdx, iIdx) {
+      let clicked = getClickedLinks();
+      if (!clicked.includes(link)) {
+        clicked.push(link);
+        localStorage.setItem('kamarah_clicked_links_v2', JSON.stringify(clicked));
+      }
+      
+      // Update UI langsung tanpa render ulang
+      const btn = document.getElementById(elementId);
+      if(btn) {
+        btn.classList.add('link-clicked');
+        const iconDiv = btn.querySelector('.status-icon');
+        if(iconDiv) iconDiv.innerText = '✔️';
+      }
+      
+      updateProgressUI(rIdx, iIdx);
+      window.open(link, '_blank');
+    }
+
+    function updateProgressUI(rIdx, iIdx) {
+      const region = finalData[rIdx];
+      const intv = region.interviewers[iIdx];
+      const clickedLinks = getClickedLinks();
+      
+      let usedCount = 0;
+      intv.links.forEach(l => {
+        if(clickedLinks.includes(l)) usedCount++;
+      });
+      
+      document.getElementById('progress-info').innerText = `${usedCount} / ${intv.links.length} Terpakai`;
+    }
 
     function showView(viewId) {
       ['view-welcome', 'view-regions', 'view-interviewers', 'view-links'].forEach(id => {
@@ -658,7 +952,9 @@ https://survey3.acornasia.com/s3/6f57e50fd4a9/i-3zkn6KTLvDQZS8dd85-8938840/?sgui
       finalData.forEach((region, rIdx) => {
         const btn = document.createElement('button');
         btn.className = 'card-item';
-        btn.innerHTML = `<div class="badge-circle">${rIdx+1}</div><div><b>${region.name}</b><br><small>${region.interviewers.length} Interviewer | Total ${region.totalLinks} Link</small></div>`;
+        btn.innerHTML = `<div class="badge-circle">${rIdx+1}</div>
+                         <div style="flex:1;"><b>${region.name}</b><br><small style="color:var(--text-muted);">${region.interviewers.length} Interviewer</small></div>
+                         <div style="text-align:right; font-size:0.75rem; color:var(--accent);">${region.totalLinks} Link</div>`;
         btn.onclick = () => renderInterviewers(rIdx);
         grid.appendChild(btn);
       });
@@ -670,10 +966,22 @@ https://survey3.acornasia.com/s3/6f57e50fd4a9/i-3zkn6KTLvDQZS8dd85-8938840/?sgui
       
       const grid = document.getElementById('interviewers-grid');
       grid.innerHTML = '';
+      
+      const clickedLinks = getClickedLinks();
+
       region.interviewers.forEach((intv, i) => {
+        let usedCount = 0;
+        intv.links.forEach(l => { if(clickedLinks.includes(l)) usedCount++; });
+        
         const btn = document.createElement('button');
         btn.className = 'card-item';
-        btn.innerHTML = `<div class="badge-circle">${i+1}</div><div><b>${intv.name}</b><br><small>${intv.links.length} Link Tersedia</small></div>`;
+        
+        const allUsed = (usedCount === intv.links.length && intv.links.length > 0);
+        if(allUsed) btn.style.borderLeft = '3px solid var(--success)';
+
+        btn.innerHTML = `<div class="badge-circle">${i+1}</div>
+                         <div style="flex:1;"><b>${intv.name}</b><br><small style="color:var(--text-muted);">Sisa: ${intv.links.length - usedCount} Link</small></div>
+                         <div style="font-size:0.75rem; ${allUsed ? 'color:var(--success);' : 'color:var(--accent);'}">${usedCount}/${intv.links.length}</div>`;
         btn.onclick = () => renderLinks(rIdx, i);
         grid.appendChild(btn);
       });
@@ -685,16 +993,29 @@ https://survey3.acornasia.com/s3/6f57e50fd4a9/i-3zkn6KTLvDQZS8dd85-8938840/?sgui
     function renderLinks(rIdx, iIdx) {
       const region = finalData[rIdx];
       const intv = region.interviewers[iIdx];
+      const clickedLinks = getClickedLinks();
 
       document.getElementById('interviewer-title').innerText = `${intv.name} (${region.name})`;
+      updateProgressUI(rIdx, iIdx);
       
       const grid = document.getElementById('links-grid');
       grid.innerHTML = '';
+      
       intv.links.forEach((link, lIdx) => {
+        const isClicked = clickedLinks.includes(link);
+        const btnId = `link-btn-${rIdx}-${iIdx}-${lIdx}`;
+        
         const btn = document.createElement('button');
-        btn.className = 'card-item';
-        btn.innerHTML = `<div class="badge-circle">${lIdx+1}</div><div style="font-size:0.7rem; word-break:break-all;">${link}</div>`;
-        btn.onclick = () => window.open(link, '_blank');
+        btn.className = 'card-item ' + (isClicked ? 'link-clicked' : '');
+        btn.id = btnId;
+        
+        const icon = isClicked ? '✔️' : '🔗';
+        
+        btn.innerHTML = `<div class="badge-circle" style="min-width:28px; height:28px; font-size:0.7rem;">${lIdx+1}</div>
+                         <div style="font-size:0.7rem; word-break:break-all; flex:1; line-height:1.4;">${link}</div>
+                         <div class="status-icon">${icon}</div>`;
+                         
+        btn.onclick = () => markAsClicked(link, btnId, rIdx, iIdx);
         grid.appendChild(btn);
       });
 
@@ -723,7 +1044,7 @@ https://survey3.acornasia.com/s3/6f57e50fd4a9/i-3zkn6KTLvDQZS8dd85-8938840/?sgui
           const btn = document.createElement('button');
           btn.className = 'card-item';
           btn.style.borderColor = 'var(--accent)';
-          btn.innerHTML = `<div class="badge-circle">W</div><div><b>${region.name}</b><br><small>Wilayah (${region.interviewers.length} User)</small></div>`;
+          btn.innerHTML = `<div class="badge-circle">W</div><div style="flex:1;"><b>${region.name}</b><br><small>Wilayah (${region.interviewers.length} User)</small></div>`;
           btn.onclick = () => renderInterviewers(rIdx);
           resGrid.appendChild(btn);
           resultsCount++;
@@ -733,7 +1054,8 @@ https://survey3.acornasia.com/s3/6f57e50fd4a9/i-3zkn6KTLvDQZS8dd85-8938840/?sgui
           if (intv.name.toLowerCase().includes(q)) {
             const btn = document.createElement('button');
             btn.className = 'card-item';
-            btn.innerHTML = `<div class="badge-circle">I</div><div><b>${intv.name}</b><br><small>${region.name} • ${intv.links.length} Link</small></div>`;
+            btn.innerHTML = `<div class="badge-circle">I</div><div style="flex:1;"><b>${intv.name}</b><br><small>${region.name}</small></div>
+                             <div style="font-size:0.75rem; color:var(--accent);">${intv.links.length} Link</div>`;
             btn.onclick = () => renderLinks(rIdx, iIdx);
             resGrid.appendChild(btn);
             resultsCount++;
@@ -747,7 +1069,7 @@ https://survey3.acornasia.com/s3/6f57e50fd4a9/i-3zkn6KTLvDQZS8dd85-8938840/?sgui
     });
 
     window.onload = () => {
-      document.getElementById('total-info').innerText = `Distribusi spesifik ${linkIndex} link per wilayah dan interviewer.`;
+      document.getElementById('total-info').innerText = `Total Data: ${linkIndex} Link didistribusikan.`;
       renderRegions();
       showView('view-welcome');
     };
