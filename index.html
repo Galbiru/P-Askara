@@ -338,36 +338,21 @@
         id: 'surabaya1',
         name: 'SURABAYA 1',
         users: [
-          ...Array.from({length: 10}, (_, i) => ({ name: `SBY ${i + 1}`, quota: 5 }))
+          ...Array.from({length: 12}, (_, i) => ({ name: `SBY ${i + 1}`, quota: 5 }))
         ]
       },
       {
         id: 'bandung1',
         name: 'BANDUNG 1',
         users: [
-          ...Array.from({length: 5}, (_, i) => ({ name: `BDG ${i + 1}`, quota: 5 }))
-        ]
-      },
-      {
-        id: 'surabaya_tambahan',
-        name: 'SURABAYA (Tambahan)',
-        users: [
-          { name: 'SBY 11', quota: 5 },
-          { name: 'SBY 12', quota: 5 }
-        ]
-      },
-      {
-        id: 'bandung_tambahan',
-        name: 'BANDUNG (Tambahan)',
-        users: [
-          ...Array.from({length: 15}, (_, i) => ({ name: `BDG ${i + 6}`, quota: 5 }))
+          ...Array.from({length: 8}, (_, i) => ({ name: `BDG ${i + 1}`, quota: 5 }))
         ]
       },
       {
         id: 'cadangan2',
         name: 'CADANGAN BATCH 2',
         users: [
-          { name: 'null 12', quota: 15 }
+          ...Array.from({length: 15}, (_, i) => ({ name: `null ${i + 12}`, quota: 5 }))
         ]
       }
     ];
